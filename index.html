@@ -18,7 +18,12 @@
           <span class="brand-mark" aria-hidden="true">✦</span>
           <span>FocusFlow</span>
         </a>
-        <p class="date-label" id="todayLabel"></p>
+        <div class="topbar-actions">
+          <p class="date-label" id="todayLabel"></p>
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="ダークモードに切り替える" aria-pressed="false">
+            <span class="theme-icon" aria-hidden="true">☾</span>
+          </button>
+        </div>
       </header>
 
       <section class="hero" aria-labelledby="pageTitle">
@@ -28,8 +33,9 @@
           <p class="hero-copy">小さく始めて、ひとつずつ前へ。</p>
         </div>
         <div class="progress-card" aria-label="今日の進捗">
+          <span class="progress-glow" aria-hidden="true"></span>
           <div class="progress-heading">
-            <span>今日の進捗</span>
+            <span><span class="progress-icon" aria-hidden="true">↗</span> 今日の進捗</span>
             <strong id="progressPercent">0%</strong>
           </div>
           <div class="progress-track"><span id="progressBar"></span></div>
