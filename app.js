@@ -16,6 +16,14 @@ const taskList = document.querySelector("#taskList");
 const emptyState = document.querySelector("#emptyState");
 const emptyTitle = document.querySelector("#emptyTitle");
 const emptyHint = document.querySelector("#emptyHint");
+const themeToggle = document.querySelector("#themeToggle");
+
+function setTheme(isDark) {
+  document.body.classList.toggle("dark-theme", isDark);
+  themeToggle.setAttribute("aria-pressed", String(isDark));
+  themeToggle.setAttribute("aria-label", isDark ? "ライトモードに切り替える" : "ダークモードに切り替える");
+  themeToggle.querySelector(".theme-icon").textContent = isDark ? "☀" : "☾";
+}
 
 function loadTasks() {
   try {
@@ -99,6 +107,14 @@ document.querySelector("#clearCompleted").addEventListener("click", () => {
   tasks = tasks.filter((task) => !task.completed);
   saveTasks();
   render();
+});
+
+const savedTheme = localStorage.getItem("focusflow-theme");
+setTheme(savedTheme === "dark");
+themeToggle.addEventListener("click", () => {
+  const isDark = !document.body.classList.contains("dark-theme");
+  setTheme(isDark);
+  localStorage.setItem("focusflow-theme", isDark ? "dark" : "light");
 });
 
 function updateFilterButtons() {
