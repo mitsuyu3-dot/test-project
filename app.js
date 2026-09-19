@@ -1,125 +1,23 @@
-const STORAGE_KEY = "focusflow-tasks";
-const createId = () => window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+const SAVE_KEY = "lumina-haven-save-v1";
+const initialState = { gold:240, crystals:18, food:95, playerLevel:3, xp:65, lastCollected:Date.now(), buildings:{ hall:1, mine:1, farm:1 }, heroes:[{id:"aria",name:"アリア",role:"光の守護者",icon:"🧝‍♀️",level:4,xp:72,maxXp:100},{id:"bram",name:"ブラム",role:"森の狩人",icon:"🧙‍♂️",level:3,xp:28,maxXp:100}], lastExpedition:0 };
+let state = loadState(); let toastTimer;
+const buildingData = { hall:{name:"中央広場",icon:"🏛️",description:"街の最大レベルを上げる",baseCost:180}, mine:{name:"光鉱山",icon:"⛏️",description:"ゴールドの生産量を増やす",baseCost:120}, farm:{name:"月光農園",icon:"🌾",description:"食料の生産量を増やす",baseCost:90} };
+function loadState() { try { const saved=JSON.parse(localStorage.getItem(SAVE_KEY)); return saved ? {...initialState,...saved,buildings:{...initialState.buildings,...saved.buildings}} : {...initialState}; } catch { return {...initialState}; } }
+function saveState() { localStorage.setItem(SAVE_KEY,JSON.stringify(state)); }
+function buildingCost(type) { return Math.round(buildingData[type].baseCost*(state.buildings[type]**1.45)); }
+function mineRate() { return state.buildings.mine*12; } function farmRate() { return state.buildings.farm*5; }
+function collectResources() { const minutes=Math.min(180,Math.max(0,(Date.now()-state.lastCollected)/60000)); const gold=Math.floor(minutes*mineRate()); const food=Math.floor(minutes*farmRate()); state.gold+=gold; state.food=Math.min(999,state.food+food); state.lastCollected=Date.now(); return {gold,food}; }
+function render() { collectResources(); [ ["goldValue",state.gold],["crystalValue",state.crystals],["foodValue",state.food],["playerLevel",state.playerLevel],["townLevel",state.buildings.hall],["hallLevel",`LV.${state.buildings.hall}`],["mineLevel",`LV.${state.buildings.mine}`],["farmLevel",`LV.${state.buildings.farm}`],["mineRate",mineRate()],["farmRate",farmRate()] ].forEach(([id,value])=>document.querySelector(`#${id}`).textContent=value); renderUpgrades(); renderHeroes(); renderMissions(); saveState(); }
+function renderUpgrades() { document.querySelector("#upgradeList").innerHTML=Object.entries(buildingData).map(([type,b])=>{const level=state.buildings[type],cost=buildingCost(type);return `<article class="upgrade-card"><span class="upgrade-icon">${b.icon}</span><div class="upgrade-info"><strong>${b.name} <small>LV.${level}</small></strong><small>${b.description}</small></div><button class="upgrade-button" data-upgrade="${type}" type="button" ${state.gold<cost?"disabled":""}>${cost} GOLD</button></article>`;}).join(""); }
+function renderHeroes() { document.querySelector("#heroCount").textContent=`${state.heroes.length} / 12`; document.querySelector("#heroRoster").innerHTML=state.heroes.map(h=>`<article class="hero-card"><div class="hero-portrait">${h.icon}</div><span class="hero-role">${h.role}</span><h3>${h.name}</h3><div class="hero-xp"><span style="width:${h.xp}%"></span></div><footer><span>Lv.${h.level}</span><span>${h.xp} / ${h.maxXp} XP</span></footer><button class="hero-upgrade" data-hero="${h.id}" type="button">育成する · ${h.level*35} G</button></article>`).join(""); }
+function renderMissions() { const cooldown=Math.max(0,12-Math.floor((Date.now()-state.lastExpedition)/1000)); const missions=[{id:"forest",icon:"🌲",name:"霧の森を探索",reward:"+60 GOLD · +20 FOOD",cost:10},{id:"ruins",icon:"🏺",name:"古代遺跡を調査",reward:"+3 CRYSTAL · +90 GOLD",cost:20}]; document.querySelector("#missionList").innerHTML=missions.map(m=>`<article class="mission-card"><span class="mission-icon">${m.icon}</span><div class="mission-info"><strong>${m.name}</strong><small>${m.reward} · 食料 ${m.cost}</small></div><button class="mission-button" data-mission="${m.id}" type="button" ${state.food<m.cost||cooldown?"disabled":""}>${cooldown?`${cooldown}s`:"出発"}</button></article>`).join(""); }
+function showToast(message) { const toast=document.querySelector("#toast"); toast.textContent=message; toast.classList.add("is-visible"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>toast.classList.remove("is-visible"),2200); }
 
-const seedTasks = [
-  { id: createId(), text: "今日の優先順位を決める", completed: true },
-  { id: createId(), text: "集中タイムを25分つくる", completed: false },
-  { id: createId(), text: "明日の予定を確認する", completed: false },
-];
-
-let tasks = loadTasks();
-let currentFilter = "all";
-
-const taskForm = document.querySelector("#taskForm");
-const taskInput = document.querySelector("#taskInput");
-const taskList = document.querySelector("#taskList");
-const emptyState = document.querySelector("#emptyState");
-const emptyTitle = document.querySelector("#emptyTitle");
-const emptyHint = document.querySelector("#emptyHint");
-const themeToggle = document.querySelector("#themeToggle");
-
-function setTheme(isDark) {
-  document.body.classList.toggle("dark-theme", isDark);
-  themeToggle.setAttribute("aria-pressed", String(isDark));
-  themeToggle.setAttribute("aria-label", isDark ? "ライトモードに切り替える" : "ダークモードに切り替える");
-  themeToggle.querySelector(".theme-icon").textContent = isDark ? "☀" : "☾";
-}
-
-function loadTasks() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return Array.isArray(saved) ? saved : seedTasks;
-  } catch {
-    return seedTasks;
-  }
-}
-
-function saveTasks() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-}
-
-function visibleTasks() {
-  if (currentFilter === "active") return tasks.filter((task) => !task.completed);
-  if (currentFilter === "completed") return tasks.filter((task) => task.completed);
-  return tasks;
-}
-
-function render() {
-  const visible = visibleTasks();
-  const completedCount = tasks.filter((task) => task.completed).length;
-  const progress = tasks.length ? Math.round((completedCount / tasks.length) * 100) : 0;
-
-  taskList.innerHTML = visible.map((task) => `
-    <li class="task-item${task.completed ? " completed" : ""}" data-id="${task.id}">
-      <div class="task-main">
-        <button class="check-button" type="button" aria-label="${task.completed ? "未完了に戻す" : "完了にする"}" aria-pressed="${task.completed}"></button>
-        <span class="task-text">${escapeHtml(task.text)}</span>
-      </div>
-      <button class="delete-button" type="button" aria-label="「${escapeHtml(task.text)}」を削除">✕</button>
-    </li>
-  `).join("");
-
-  document.querySelector("#taskCount").textContent = `${tasks.length}件のタスク`;
-  document.querySelector("#progressPercent").textContent = `${progress}%`;
-  document.querySelector("#progressBar").style.width = `${progress}%`;
-  document.querySelector("#progressMessage").textContent = progress === 100 ? "すべて完了。すばらしい一日です！" : progress > 0 ? "いいペース。その調子で進めよう。" : "まずはひとつ、完了させよう。";
-
-  const hasVisibleTasks = visible.length > 0;
-  emptyState.hidden = hasVisibleTasks;
-  if (!hasVisibleTasks) {
-    emptyTitle.textContent = currentFilter === "completed" ? "完了済みのタスクはありません" : currentFilter === "active" ? "未完了のタスクはありません" : "タスクはありません";
-    emptyHint.textContent = currentFilter === "all" ? "上のフォームから、最初の一歩を追加しましょう。" : "フィルターを変えて、別のタスクを見てみましょう。";
-  }
-}
-
-function escapeHtml(value) {
-  return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#039;", '"': "&quot;" })[character]);
-}
-
-taskForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const text = taskInput.value.trim();
-  if (!text) return;
-  tasks.unshift({ id: createId(), text, completed: false });
-  saveTasks();
-  taskInput.value = "";
-  currentFilter = "all";
-  updateFilterButtons();
-  render();
-  taskInput.focus();
-});
-
-taskList.addEventListener("click", (event) => {
-  const item = event.target.closest(".task-item");
-  if (!item) return;
-  const task = tasks.find((candidate) => candidate.id === item.dataset.id);
-  if (event.target.closest(".check-button")) task.completed = !task.completed;
-  if (event.target.closest(".delete-button")) tasks = tasks.filter((candidate) => candidate.id !== item.dataset.id);
-  saveTasks();
-  render();
-});
-
-document.querySelectorAll(".filter-button").forEach((button) => {
-  button.addEventListener("click", () => { currentFilter = button.dataset.filter; updateFilterButtons(); render(); });
-});
-
-document.querySelector("#clearCompleted").addEventListener("click", () => {
-  tasks = tasks.filter((task) => !task.completed);
-  saveTasks();
-  render();
-});
-
-const savedTheme = localStorage.getItem("focusflow-theme");
-setTheme(savedTheme === "dark");
-themeToggle.addEventListener("click", () => {
-  const isDark = !document.body.classList.contains("dark-theme");
-  setTheme(isDark);
-  localStorage.setItem("focusflow-theme", isDark ? "dark" : "light");
-});
-
-function updateFilterButtons() {
-  document.querySelectorAll(".filter-button").forEach((button) => button.classList.toggle("is-active", button.dataset.filter === currentFilter));
-}
-
-document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("ja-JP", { month: "long", day: "numeric", weekday: "short" }).format(new Date());
-render();
+document.querySelector("#collectButton").addEventListener("click",()=>{const {gold,food}=collectResources();state.gold+=15;state.food+=5;saveState();render();showToast(`資源を回収！ +${gold+15} GOLD · +${food+5} FOOD`);});
+document.querySelector("#upgradeList").addEventListener("click",e=>{const button=e.target.closest("[data-upgrade]");if(!button)return;const type=button.dataset.upgrade,cost=buildingCost(type);if(state.gold<cost)return;state.gold-=cost;state.buildings[type]++;state.xp+=10;if(state.xp>=100){state.playerLevel++;state.xp-=100;showToast("プレイヤーレベルアップ！");}else showToast(`${buildingData[type].name}がレベルアップ！`);render();});
+document.querySelector("#heroRoster").addEventListener("click",e=>{const button=e.target.closest("[data-hero]");if(!button)return;const hero=state.heroes.find(h=>h.id===button.dataset.hero),cost=hero.level*35;if(state.gold<cost)return;state.gold-=cost;hero.xp+=35;if(hero.xp>=hero.maxXp){hero.level++;hero.xp-=hero.maxXp;}showToast(`${hero.name}が強くなった！`);render();});
+document.querySelector("#recruitButton").addEventListener("click",()=>{if(state.crystals<10||state.heroes.length>=12)return;const recruits=[{id:"celes",name:"セレス",role:"星読み",icon:"🧚‍♀️"},{id:"dorian",name:"ドリアン",role:"鉄壁の騎士",icon:"🛡️"},{id:`hero-${Date.now()}`,name:"ノア",role:"旅の錬金術師",icon:"🧑‍🔬"}],newHero=recruits[state.heroes.length%recruits.length];state.heroes.push({...newHero,level:1,xp:0,maxXp:100});state.crystals-=10;showToast(`${newHero.name}が仲間になった！`);render();});
+document.querySelector("#missionList").addEventListener("click",e=>{const button=e.target.closest("[data-mission]");if(!button)return;const mission=button.dataset.mission,cost=mission==="ruins"?20:10;if(state.food<cost)return;state.food-=cost;state.lastExpedition=Date.now();if(mission==="ruins")state.crystals+=3;state.gold+=mission==="ruins"?90:60;state.food+=20;showToast(mission==="ruins"?"遺跡からクリスタルを発見！":"探索成功！資源を持ち帰った！");render();});
+document.querySelectorAll(".nav-button").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll(".nav-button").forEach(item=>item.classList.toggle("is-active",item===button));document.querySelectorAll(".screen").forEach(screen=>{screen.hidden=screen.id!==button.dataset.screen;});window.scrollTo({top:0,behavior:"smooth"});}));
+document.querySelector("#soundToggle").addEventListener("click",e=>{const active=e.currentTarget.getAttribute("aria-pressed")==="true";e.currentTarget.setAttribute("aria-pressed",String(!active));showToast(!active?"サウンド ON":"サウンド OFF");});
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); render(); setInterval(()=>{collectResources();render();},1000);
