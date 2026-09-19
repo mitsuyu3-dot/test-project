@@ -1,0 +1,10 @@
+{
+  "name": "Lumina Haven — 小さな街の大冒険",
+  "short_name": "Lumina Haven",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#10182c",
+  "description": "街を育て、英雄たちと未知の世界を探索する一人用ゲーム。",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

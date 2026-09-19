@@ -2,71 +2,33 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="今日やることに集中するための、シンプルなタスク管理アプリ。" />
-    <title>FocusFlow — 今日に集中する</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#10182c" />
+    <meta name="description" content="小さな街を育て、英雄たちと未知の世界を探索する一人用ゲーム。" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <title>Lumina Haven — 小さな街の大冒険</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
     <script src="app.js" defer></script>
   </head>
   <body>
-    <main class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="./" aria-label="FocusFlow ホームへ戻る">
-          <span class="brand-mark" aria-hidden="true">✦</span>
-          <span>FocusFlow</span>
-        </a>
-        <p class="date-label" id="todayLabel"></p>
-      </header>
+    <main class="game-shell">
+      <header class="topbar"><a class="brand" href="./" aria-label="Lumina Haven ホーム"><span class="brand-mark" aria-hidden="true">✦</span><span><b>LUMINA</b><small>HAVEN</small></span></a><div class="top-actions"><div class="player-level"><span>LV</span><strong id="playerLevel">3</strong></div><button class="icon-button" id="soundToggle" type="button" aria-label="サウンドを切り替える" aria-pressed="false">♬</button></div></header>
+      <section class="resource-bar" aria-label="保有資源"><div class="resource"><span class="resource-icon gold">◆</span><div><small>GOLD</small><strong id="goldValue">240</strong></div></div><div class="resource"><span class="resource-icon crystal">✦</span><div><small>CRYSTAL</small><strong id="crystalValue">18</strong></div></div><div class="resource"><span class="resource-icon food">●</span><div><small>FOOD</small><strong id="foodValue">95</strong></div></div></section>
 
-      <section class="hero" aria-labelledby="pageTitle">
-        <div>
-          <p class="eyebrow">YOUR DAILY SPACE</p>
-          <h1 id="pageTitle">今日に集中する。</h1>
-          <p class="hero-copy">小さく始めて、ひとつずつ前へ。</p>
-        </div>
-        <div class="progress-card" aria-label="今日の進捗">
-          <div class="progress-heading">
-            <span>今日の進捗</span>
-            <strong id="progressPercent">0%</strong>
-          </div>
-          <div class="progress-track"><span id="progressBar"></span></div>
-          <p id="progressMessage">まずはひとつ、完了させよう。</p>
-        </div>
+      <section class="screen is-active" id="townScreen" aria-labelledby="townTitle"><div class="screen-heading"><div><p class="kicker">DAY 07 · MORNING</p><h1 id="townTitle">ルミナの街</h1><p>小さな光を、守り続けよう。</p></div><button class="collect-button" id="collectButton" type="button"><span>＋</span>資源を回収</button></div>
+        <div class="town-scene"><div class="sun-orb" aria-hidden="true"></div><div class="cloud cloud-one" aria-hidden="true"></div><div class="cloud cloud-two" aria-hidden="true"></div><div class="mountains" aria-hidden="true"></div><div class="scene-title"><span>YOUR HAVEN</span><strong>LV. <b id="townLevel">1</b></strong></div><div class="town-buildings"><button class="building building-hall" data-building="hall" type="button"><span class="building-level" id="hallLevel">LV.1</span><span class="building-art">🏛️</span><strong>中央広場</strong><small>街の中心</small></button><button class="building building-mine" data-building="mine" type="button"><span class="building-level" id="mineLevel">LV.1</span><span class="building-art">⛏️</span><strong>光鉱山</strong><small>+<span id="mineRate">12</span> GOLD / 分</small></button><button class="building building-farm" data-building="farm" type="button"><span class="building-level" id="farmLevel">LV.1</span><span class="building-art">🌾</span><strong>月光農園</strong><small>+<span id="farmRate">5</span> FOOD / 分</small></button></div><div class="scene-path" aria-hidden="true"></div></div>
+        <div class="section-row"><div><p class="kicker">BUILD & GROW</p><h2>街を発展させる</h2></div><span class="hint">建物をタップして強化</span></div><div class="upgrade-list" id="upgradeList"></div>
       </section>
 
-      <section class="task-panel" aria-labelledby="taskHeading">
-        <div class="panel-heading">
-          <div>
-            <h2 id="taskHeading">今日のタスク</h2>
-            <p id="taskCount">0件のタスク</p>
-          </div>
-          <button class="clear-button" id="clearCompleted" type="button">完了済みを削除</button>
-        </div>
+      <section class="screen" id="heroesScreen" aria-labelledby="heroesTitle" hidden><div class="screen-heading"><div><p class="kicker">YOUR COMPANIONS</p><h1 id="heroesTitle">英雄たち</h1><p>仲間を育てて、遠征に送り出そう。</p></div><span class="collection-count" id="heroCount">2 / 12</span></div><div class="hero-roster" id="heroRoster"></div><button class="recruit-card" id="recruitButton" type="button"><span class="recruit-icon">✦</span><span><strong>新しい英雄を探す</strong><small>クリスタル 10個でスカウト</small></span><b>＋</b></button></section>
 
-        <form class="task-form" id="taskForm">
-          <label class="sr-only" for="taskInput">新しいタスク</label>
-          <input id="taskInput" name="task" type="text" maxlength="80" placeholder="新しいタスクを追加…" autocomplete="off" required />
-          <button class="add-button" type="submit"><span aria-hidden="true">＋</span>追加</button>
-        </form>
+      <section class="screen" id="expeditionScreen" aria-labelledby="expeditionTitle" hidden><div class="screen-heading"><div><p class="kicker">BEYOND THE WALL</p><h1 id="expeditionTitle">遠征マップ</h1><p>英雄を送り出して、報酬を手に入れよう。</p></div><span class="map-badge">MAP 01</span></div><div class="map-card"><div class="map-grid" aria-hidden="true"></div><span class="map-marker marker-one">⌂</span><span class="map-marker marker-two">?</span><span class="map-marker marker-three">✦</span><div class="map-label">未知の森</div></div><div class="mission-list" id="missionList"></div></section>
 
-        <div class="filters" role="group" aria-label="タスクの表示を切り替え">
-          <button class="filter-button is-active" data-filter="all" type="button">すべて</button>
-          <button class="filter-button" data-filter="active" type="button">未完了</button>
-          <button class="filter-button" data-filter="completed" type="button">完了済み</button>
-        </div>
-
-        <ul class="task-list" id="taskList" aria-live="polite"></ul>
-        <div class="empty-state" id="emptyState" hidden>
-          <span class="empty-icon" aria-hidden="true">☼</span>
-          <p id="emptyTitle">タスクはありません</p>
-          <span id="emptyHint">上のフォームから、最初の一歩を追加しましょう。</span>
-        </div>
-      </section>
-
-      <footer class="footer-note"><span aria-hidden="true">⌘</span> Focus on what matters</footer>
+      <nav class="bottom-nav" aria-label="ゲームメニュー"><button class="nav-button is-active" data-screen="townScreen" type="button"><span>⌂</span><small>街</small></button><button class="nav-button" data-screen="heroesScreen" type="button"><span>♙</span><small>英雄</small></button><button class="nav-button" data-screen="expeditionScreen" type="button"><span>✧</span><small>遠征</small></button></nav><div class="toast" id="toast" role="status" aria-live="polite"></div>
     </main>
   </body>
 </html>
