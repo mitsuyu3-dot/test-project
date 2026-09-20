@@ -30,5 +30,6 @@ export function renderCardFace({ rank, suit, faceUp = true, squeezeProgress = 10
   const isCourt = ["J", "Q", "K"].includes(rank);
   const isNumber = rank === "A" || Object.hasOwn(PIP_LAYOUTS, rank);
   const pips = isNumber && (faceUp || progress > 0) ? (PIP_LAYOUTS[rank] ?? []).map(pip => useSuit(suit, pip.x, pip.y, rank === "A" ? 23 : 13, pip.flip)).join("") : "";
-  return `<svg class="card-face-svg" viewBox="0 0 100 140" aria-hidden="true"><defs><path id="suit-heart" d="${SUIT_PATHS.heart}"/><path id="suit-diamond" d="${SUIT_PATHS.diamond}"/><path id="suit-spade" d="${SUIT_PATHS.spade}"/><path id="suit-club" d="${SUIT_PATHS.club}"/></defs>${showIndex ? indexMarkup(rank, suit, 12, 19) + indexMarkup(rank, suit, 88, 121, true) : ""}${isCourt ? courtMarkup(rank, suit) : pips}</svg>`;
+  const defs = Object.entries(SUIT_PATHS).map(([name, path]) => `<symbol id="suit-${name}" viewBox="-30 -30 60 60"><path d="${path}"/></symbol>`).join("");
+  return `<svg class="card-face-svg" viewBox="0 0 100 140" aria-hidden="true"><defs>${defs}</defs>${showIndex ? indexMarkup(rank, suit, 12, 19) + indexMarkup(rank, suit, 88, 121, true) : ""}${isCourt ? courtMarkup(rank, suit) : pips}</svg>`;
 }
