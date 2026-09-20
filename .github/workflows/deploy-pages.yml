@@ -1,0 +1,52 @@
+name: Deploy Web App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web assets
+        run: npm run build
+
+      - name: Publish www to gh-pages
+        env:
+          DEPLOY_DIR: ${{ runner.temp }}/gh-pages
+        run: |
+          git fetch origin gh-pages
+          git worktree add "$DEPLOY_DIR" origin/gh-pages
+
+          find "$DEPLOY_DIR" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R www/. "$DEPLOY_DIR/"
+          touch "$DEPLOY_DIR/.nojekyll"
+
+          git -C "$DEPLOY_DIR" config user.name "github-actions[bot]"
+          git -C "$DEPLOY_DIR" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$DEPLOY_DIR" add -A
+
+          if git -C "$DEPLOY_DIR" diff --cached --quiet; then
+            echo "No web changes to publish."
+          else
+            git -C "$DEPLOY_DIR" commit -m "deploy: publish web app"
+            git -C "$DEPLOY_DIR" push origin HEAD:gh-pages
+          fi

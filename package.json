@@ -1,0 +1,17 @@
+{
+  "name": "lumina-haven",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lumina Haven — 小さな街の大冒険",
+  "scripts": {
+    "build": "node scripts/build-web.mjs",
+    "build:web": "node scripts/build-web.mjs"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.2"
+  }
+}

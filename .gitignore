@@ -1,0 +1,9 @@
+node_modules/
+
+# Generated web bundle; GitHub Actions creates this during deployment.
+www/*
+!www/.gitkeep
+
+# Local Capacitor/Xcode artifacts.
+ios/App/Pods/
+ios/App/DerivedData/
