@@ -27,3 +27,20 @@ test("squeeze progress hides the index until the reveal is nearly complete", () 
   assert.doesNotMatch(early, />10</);
   assert.match(late, />10</);
 });
+
+test("all card ranks keep their pip counts and suit colors inside the card viewBox", () => {
+  for (const rank of ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10"]) {
+    const face = renderCardFace({ rank, suit: "♥" });
+    assert.equal((face.match(/suit-heart/g) ?? []).length, PIP_LAYOUTS[rank].length + 3);
+    assert.match(face, /viewBox="0 0 100 140"/);
+    assert.match(face, /fill="#b52e3c"/);
+  }
+  assert.match(renderCardFace({ rank: "K", suit: "♠" }), /fill="#17221e"/);
+});
+
+test("court rank is hidden during an early squeeze and shown near completion", () => {
+  const early = renderCardFace({ rank: "Q", suit: "♦", faceUp: false, squeezeProgress: 40 });
+  const late = renderCardFace({ rank: "Q", suit: "♦", faceUp: false, squeezeProgress: 80 });
+  assert.doesNotMatch(early, />Q</);
+  assert.match(late, />Q</);
+});
