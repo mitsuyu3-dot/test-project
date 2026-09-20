@@ -33,6 +33,7 @@ export function progressForDirection(direction, { dx, dy, width, height }) {
 export function clipForDirection(direction, progress) {
   const p = clamp(progress);
   const remaining = 100 - p;
+  if (p >= 100 && direction.includes("-")) return "inset(0)";
   if (direction === "left") return `inset(0 ${remaining}% 0 0)`;
   if (direction === "right") return `inset(0 0 0 ${remaining}%)`;
   if (direction === "top") return `inset(0 0 ${remaining}% 0)`;
