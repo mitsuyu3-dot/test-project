@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#10182c" />
-    <meta name="description" content="小さな街を育て、英雄たちと未知の世界を探索する一人用ゲーム。" />
+    <meta name="theme-color" content="#071c18" />
+    <meta name="description" content="仮想チップで遊ぶ無料バカラゲーム。" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
-    <title>Lumina Haven — 小さな街の大冒険</title>
+    <title>VELVET TABLE — 仮想チップ・バカラ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet" />
@@ -15,20 +15,36 @@
     <script src="app.js" defer></script>
   </head>
   <body>
-    <main class="game-shell">
-      <header class="topbar"><a class="brand" href="./" aria-label="Lumina Haven ホーム"><span class="brand-mark" aria-hidden="true">✦</span><span><b>LUMINA</b><small>HAVEN</small></span></a><div class="top-actions"><div class="player-level"><span>LV</span><strong id="playerLevel">3</strong></div><button class="icon-button" id="soundToggle" type="button" aria-label="サウンドを切り替える" aria-pressed="false">♬</button></div></header>
-      <section class="resource-bar" aria-label="保有資源"><div class="resource"><span class="resource-icon gold">◆</span><div><small>GOLD</small><strong id="goldValue">240</strong></div></div><div class="resource"><span class="resource-icon crystal">✦</span><div><small>CRYSTAL</small><strong id="crystalValue">18</strong></div></div><div class="resource"><span class="resource-icon food">●</span><div><small>FOOD</small><strong id="foodValue">95</strong></div></div></section>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="VELVET TABLE ホーム"><span class="brand-mark">♠</span><span><b>VELVET</b><small>TABLE</small></span></a>
+        <div class="balance"><small>VIRTUAL CHIPS</small><strong id="balanceValue">1,000</strong></div>
+      </header>
 
-      <section class="screen is-active" id="townScreen" aria-labelledby="townTitle"><div class="screen-heading"><div><p class="kicker">DAY 07 · MORNING</p><h1 id="townTitle">ルミナの街</h1><p>小さな光を、守り続けよう。</p></div><button class="collect-button" id="collectButton" type="button"><span>＋</span>資源を回収</button></div>
-        <div class="town-scene"><div class="sun-orb" aria-hidden="true"></div><div class="cloud cloud-one" aria-hidden="true"></div><div class="cloud cloud-two" aria-hidden="true"></div><div class="mountains" aria-hidden="true"></div><div class="scene-title"><span>YOUR HAVEN</span><strong>LV. <b id="townLevel">1</b></strong></div><div class="town-buildings"><button class="building building-hall" data-building="hall" type="button"><span class="building-level" id="hallLevel">LV.1</span><span class="building-art">🏛️</span><strong>中央広場</strong><small>街の中心</small></button><button class="building building-mine" data-building="mine" type="button"><span class="building-level" id="mineLevel">LV.1</span><span class="building-art">⛏️</span><strong>光鉱山</strong><small>+<span id="mineRate">12</span> GOLD / 分</small></button><button class="building building-farm" data-building="farm" type="button"><span class="building-level" id="farmLevel">LV.1</span><span class="building-art">🌾</span><strong>月光農園</strong><small>+<span id="farmRate">5</span> FOOD / 分</small></button></div><div class="scene-path" aria-hidden="true"></div></div>
-        <div class="section-row"><div><p class="kicker">BUILD & GROW</p><h2>街を発展させる</h2></div><span class="hint">建物をタップして強化</span></div><div class="upgrade-list" id="upgradeList"></div>
+      <section class="hero-copy"><p class="eyebrow">SINGLE PLAYER · PRACTICE TABLE</p><h1>運命を、<em>一枚ずつ。</em></h1><p>現金を使わず、仮想チップだけで遊ぶバカラゲーム。</p></section>
+
+      <section class="table-card" aria-label="バカラテーブル">
+        <div class="table-glow"></div>
+        <div class="table-head"><span class="round-label" id="roundLabel">ROUND 01</span><span class="shoe-label">VIRTUAL TABLE</span></div>
+        <div class="hands">
+          <article class="hand" id="playerHand"><div class="hand-title"><span>PLAYER</span><strong id="playerTotal">—</strong></div><div class="cards" id="playerCards"><div class="card card-back">?</div><div class="card card-back">?</div></div></article>
+          <div class="versus"><span>VS</span><small id="resultLabel">BET TO DEAL</small></div>
+          <article class="hand" id="bankerHand"><div class="hand-title"><span>BANKER</span><strong id="bankerTotal">—</strong></div><div class="cards" id="bankerCards"><div class="card card-back">?</div><div class="card card-back">?</div></div></article>
+        </div>
+        <div class="table-message" id="tableMessage">ベットを選んで、ラウンドを始めましょう</div>
       </section>
 
-      <section class="screen" id="heroesScreen" aria-labelledby="heroesTitle" hidden><div class="screen-heading"><div><p class="kicker">YOUR COMPANIONS</p><h1 id="heroesTitle">英雄たち</h1><p>仲間を育てて、遠征に送り出そう。</p></div><span class="collection-count" id="heroCount">2 / 12</span></div><div class="hero-roster" id="heroRoster"></div><button class="recruit-card" id="recruitButton" type="button"><span class="recruit-icon">✦</span><span><strong>新しい英雄を探す</strong><small>クリスタル 10個でスカウト</small></span><b>＋</b></button></section>
+      <section class="bet-panel" aria-label="ベット設定">
+        <div class="section-heading"><div><p class="eyebrow">PLACE YOUR BET</p><h2>ベット先を選ぶ</h2></div><span class="bet-total">BET <strong id="betValue">0</strong></span></div>
+        <div class="bet-targets" id="betTargets"><button class="target-button" data-target="player" type="button"><span>PLAYER</span><small>配当 1 : 1</small></button><button class="target-button" data-target="tie" type="button"><span>TIE</span><small>配当 1 : 8</small></button><button class="target-button" data-target="banker" type="button"><span>BANKER</span><small>配当 1 : 0.95</small></button></div>
+        <div class="chip-row" aria-label="チップ額"><button class="chip-button" data-amount="10" type="button">10</button><button class="chip-button" data-amount="50" type="button">50</button><button class="chip-button" data-amount="100" type="button">100</button><button class="chip-button chip-clear" id="clearBet" type="button">CLEAR</button></div>
+        <button class="deal-button" id="dealButton" type="button" disabled><span>カードを配る</span><small>BETを選択してください</small></button>
+      </section>
 
-      <section class="screen" id="expeditionScreen" aria-labelledby="expeditionTitle" hidden><div class="screen-heading"><div><p class="kicker">BEYOND THE WALL</p><h1 id="expeditionTitle">遠征マップ</h1><p>英雄を送り出して、報酬を手に入れよう。</p></div><span class="map-badge">MAP 01</span></div><div class="map-card"><div class="map-grid" aria-hidden="true"></div><span class="map-marker marker-one">⌂</span><span class="map-marker marker-two">?</span><span class="map-marker marker-three">✦</span><div class="map-label">未知の森</div></div><div class="mission-list" id="missionList"></div></section>
+      <section class="info-grid"><article class="info-card"><span class="info-icon">♧</span><div><strong>バカラの遊び方</strong><p>PLAYERとBANKERのどちらが9に近いかを予想します。合計の下一桁が強さです。</p></div></article><article class="info-card"><span class="info-icon">◷</span><div><strong>仮想チップのみ</strong><p>このゲームに現金の入出金機能はありません。安心してルールを練習できます。</p></div></article></section>
 
-      <nav class="bottom-nav" aria-label="ゲームメニュー"><button class="nav-button is-active" data-screen="townScreen" type="button"><span>⌂</span><small>街</small></button><button class="nav-button" data-screen="heroesScreen" type="button"><span>♙</span><small>英雄</small></button><button class="nav-button" data-screen="expeditionScreen" type="button"><span>✧</span><small>遠征</small></button></nav><div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <section class="history-section"><div class="section-heading"><div><p class="eyebrow">RECENT ROUNDS</p><h2>ラウンド履歴</h2></div><button class="text-button" id="resetButton" type="button">残高をリセット</button></div><div class="history-list" id="historyList"><p class="empty-state">まだラウンド履歴がありません。</p></div></section>
+      <footer class="footer-note">VELVET TABLE · FREE VIRTUAL CHIP GAME</footer>
     </main>
   </body>
 </html>
