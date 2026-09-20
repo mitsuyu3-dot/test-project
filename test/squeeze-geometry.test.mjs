@@ -25,4 +25,11 @@ test("edge and corner masks use different clip paths", () => {
   assert.match(clipForDirection("left", 20), /inset/);
   assert.match(clipForDirection("top", 20), /inset/);
   assert.match(clipForDirection("top-left", 20), /polygon/);
+  assert.equal(clipForDirection("bottom-right", 100), "inset(0)");
+});
+
+test("all eight squeeze directions produce a non-empty reveal mask", () => {
+  for (const direction of ["left", "right", "top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"]) {
+    assert.match(clipForDirection(direction, 35), /inset|polygon/);
+  }
 });

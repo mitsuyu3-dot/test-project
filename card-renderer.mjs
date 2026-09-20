@@ -22,7 +22,7 @@ function suitName(suit) { return { "♥": "heart", "♦": "diamond", "♠": "spa
 function suitColor(suit) { return ["♥", "♦"].includes(suit) ? "#b52e3c" : "#17221e"; }
 function useSuit(suit, x, y, size = 15, flip = false) { return `<use href="#suit-${suitName(suit)}" x="${x - size / 2}" y="${y - size / 2}" width="${size}" height="${size}" fill="${suitColor(suit)}"${flip ? ` transform="rotate(180 ${x} ${y})"` : ""} />`; }
 function indexMarkup(rank, suit, x, y, rotate = false) { return `<g class="card-index"${rotate ? ` transform="rotate(180 ${x} ${y})"` : ""}><text x="${x}" y="${y}" fill="${suitColor(suit)}">${rank}</text>${useSuit(suit, x + 1, y + 8, 6)}</g>`; }
-function courtMarkup(rank, suit) { const colors = { J: "#2b6f63", Q: "#8c4761", K: "#89672f" }; return `<g class="court-figure"><rect x="25" y="35" width="50" height="70" rx="8" fill="${colors[rank]}" opacity=".95"/><circle cx="50" cy="48" r="10" fill="#f5dcc1"/><path d="M34 91 Q50 64 66 91" fill="none" stroke="#f5e9d2" stroke-width="7"/><path d="M36 74 L64 74" stroke="#f5e9d2" stroke-width="4"/><text x="50" y="101" fill="#f5e9d2">${rank}</text></g>`; }
+function courtMarkup(rank, suit, showRank = true) { const colors = { J: "#2b6f63", Q: "#8c4761", K: "#89672f" }; return `<g class="court-figure"><rect x="25" y="35" width="50" height="70" rx="8" fill="${colors[rank]}" opacity=".95"/><circle cx="50" cy="48" r="10" fill="#f5dcc1"/><path d="M34 91 Q50 64 66 91" fill="none" stroke="#f5e9d2" stroke-width="7"/><path d="M36 74 L64 74" stroke="#f5e9d2" stroke-width="4"/>${showRank ? `<text x="50" y="101" fill="#f5e9d2">${rank}</text>` : ""}</g>`; }
 
 export function renderCardFace({ rank, suit, faceUp = true, squeezeProgress = 100 }) {
   const progress = Math.max(0, Math.min(100, squeezeProgress));
@@ -31,5 +31,5 @@ export function renderCardFace({ rank, suit, faceUp = true, squeezeProgress = 10
   const isNumber = rank === "A" || Object.hasOwn(PIP_LAYOUTS, rank);
   const pips = isNumber && (faceUp || progress > 0) ? (PIP_LAYOUTS[rank] ?? []).map(pip => useSuit(suit, pip.x, pip.y, rank === "A" ? 23 : 13, pip.flip)).join("") : "";
   const defs = Object.entries(SUIT_PATHS).map(([name, path]) => `<symbol id="suit-${name}" viewBox="-30 -30 60 60"><path d="${path}"/></symbol>`).join("");
-  return `<svg class="card-face-svg" viewBox="0 0 100 140" aria-hidden="true"><defs>${defs}</defs>${showIndex ? indexMarkup(rank, suit, 12, 19) + indexMarkup(rank, suit, 88, 121, true) : ""}${isCourt ? courtMarkup(rank, suit) : pips}</svg>`;
+  return `<svg class="card-face-svg" viewBox="0 0 100 140" aria-hidden="true"><defs>${defs}</defs>${showIndex ? indexMarkup(rank, suit, 12, 19) + indexMarkup(rank, suit, 88, 121, true) : ""}${isCourt ? courtMarkup(rank, suit, faceUp || progress >= 75) : pips}</svg>`;
 }
