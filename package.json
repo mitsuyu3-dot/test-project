@@ -5,7 +5,8 @@
   "description": "Lumina Haven — 小さな街の大冒険",
   "scripts": {
     "build": "node scripts/build-web.mjs",
-    "build:web": "node scripts/build-web.mjs"
+    "build:web": "node scripts/build-web.mjs",
+    "test": "node --test test/*.test.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^8.5.2",

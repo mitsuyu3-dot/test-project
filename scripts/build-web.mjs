@@ -7,6 +7,7 @@ const webDir = resolve(projectRoot, "www");
 const assets = [
   "index.html",
   "app.js",
+  "baccarat-rules.mjs",
   "style.css",
   "sw.js",
   "manifest.webmanifest",
