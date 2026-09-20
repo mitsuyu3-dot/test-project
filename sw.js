@@ -1,4 +1,4 @@
-const CACHE_NAME = "lumina-haven-v1";
+const CACHE_NAME = "velvet-table-v1";
 const APP_SHELL = ["./", "./index.html", "./style.css", "./app.js", "./manifest.webmanifest", "./icon.svg"];
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL))));
 self.addEventListener("activate", event => event.waitUntil(self.clients.claim()));
