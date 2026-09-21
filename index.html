@@ -23,9 +23,13 @@
       .squeeze-direction-bottom .squeeze-candidates { grid-column: 1; grid-row: 2; }
       .squeeze-candidates { background: rgba(255,255,255,.06); border: 1px solid rgba(240,209,142,.25); border-radius: 10px; display: flex; flex-direction: column; gap: 7px; max-width: 190px; padding: 13px; }
       .squeeze-candidates-label { color: #9aaea6; font-size: 10px; letter-spacing: .12em; }
-      .squeeze-candidates strong { color: #f0d18e; font-size: 15px; line-height: 1.45; }
+      .squeeze-candidates strong { color: #f0d18e; display: flex; flex-wrap: wrap; gap: 6px; font-size: 15px; line-height: 1.45; }
+      .squeeze-candidates strong::first-letter { color: #f7f3e9; }
       .squeeze-candidates small { color: #9aaea6; font-size: 10px; }
-      .squeeze-candidates.is-confirmed { border-color: #82d99e; }
+      .squeeze-candidates.is-likely { border-color: #d8b36a; box-shadow: 0 0 18px rgba(216,179,106,.18); }
+      .squeeze-candidates.is-confirmed { border-color: #f0d18e; box-shadow: 0 0 22px rgba(240,209,142,.3); }
+      .squeeze-candidates strong, .squeeze-candidates small { animation: squeeze-candidate-update .18s ease both; }
+      @keyframes squeeze-candidate-update { from { opacity: .35; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
       @media (max-width: 600px) { .squeeze-modal-stage, .squeeze-direction-right .squeeze-modal-stage, .squeeze-direction-bottom .squeeze-modal-stage { grid-template-columns: auto; grid-template-rows: auto auto; } .squeeze-direction-right .squeeze-candidates, .squeeze-direction-bottom .squeeze-candidates { grid-column: 1; grid-row: 2; } .squeeze-candidates { max-width: 340px; width: 100%; } }
     </style>
     <script type="module" src="app.js"></script>
