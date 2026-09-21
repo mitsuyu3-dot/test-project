@@ -30,6 +30,11 @@ export function progressForDirection(direction, { dx, dy, width, height }) {
   return clamp(progress);
 }
 
+export function progressFromBoundary(direction, { x, y }) {
+  const progress = { left: x, right: 1 - x, top: y, bottom: 1 - y, "top-left": Math.min(x, y), "top-right": Math.min(1 - x, y), "bottom-left": Math.min(x, 1 - y), "bottom-right": Math.min(1 - x, 1 - y) }[direction] ?? 0;
+  return Math.round(clamp(progress * 100) * 100) / 100;
+}
+
 export function clipForDirection(direction, progress) {
   const p = clamp(progress);
   const remaining = 100 - p;
