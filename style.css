@@ -58,3 +58,26 @@ button { min-height: 44px; border: 0; font: inherit; cursor: pointer; } button:f
 @media (max-width: 720px) and (max-height: 666px) {
   .table-card { padding-top: 3px; padding-bottom: 4px; }.hand { padding-top: 4px; }.cards { min-height: 56px; }.card { width: clamp(37px, 12vw, 46px); }.hand-title { margin-bottom: 2px; }.hand-title strong { width: 24px; height: 24px; }.hand-actions button { min-height: 44px; }.side-bet-heading { margin-top: 4px; }.side-bet-button { min-height: 32px; }.deal-button { height: 46px; min-height: 46px; }
 }
+
+.hand-actions[hidden], .bet-panel[hidden], .new-round-button[hidden] { display: none !important; }
+.hand-bet-amount { display: block; min-height: 14px; margin: -8px 0 4px; color: var(--muted); font-size: 9px; font-weight: 900; }
+.settings-icon { display: block; width: 16px; height: 16px; margin: auto; position: relative; border: 3px solid currentColor; border-radius: 50%; }
+.settings-icon::before, .settings-icon::after { position: absolute; inset: 50% auto auto 50%; width: 22px; height: 3px; content: ""; background: currentColor; transform: translate(-50%, -50%); }
+.settings-icon::after { width: 3px; height: 22px; }
+.side-bets-toggle { display: none; color: var(--navy-700); background: var(--blue-soft); border: 2px solid var(--blue); border-radius: 999px; font-size: 10px; font-weight: 900; }
+
+@media (max-width: 720px) {
+  .hands { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-rows: auto; align-items: stretch; }
+  .hand, .cards, .hand-title, .hand-actions { min-width: 0; }
+  .hand-title span { overflow: visible; white-space: nowrap; font-size: clamp(10px, 3.4vw, 13px); }
+  .hand-bet-amount { min-height: 11px; margin: -2px 0 2px; font-size: 8px; }
+  .cards { overflow: hidden; }
+  .versus { grid-column: 2; grid-row: 1; min-width: 39px; align-self: center; }
+  .hand:first-child { grid-column: 1; grid-row: 1; }.hand:last-child { grid-column: 3; grid-row: 1; }
+  .side-bet-heading { align-items: center; }
+  .side-bets-toggle { display: block; min-height: 32px; padding: 4px 10px; }
+  .side-bets { display: none; }
+  .side-bets.is-open { display: grid; position: fixed; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom)); left: 8px; z-index: 25; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 12px; background: var(--white); border: 3px solid var(--line); border-radius: 18px; box-shadow: 0 -6px 0 rgba(18,67,123,.18), 0 -18px 36px rgba(13,86,148,.22); }
+  .side-bets.is-open .side-bet-button { min-height: 44px; }
+  .table-card { width: 100%; }
+}
