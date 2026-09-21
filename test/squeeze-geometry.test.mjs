@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { clipForDirection, detectSqueezeDirection, progressForDirection } from "../squeeze-geometry.mjs";
+import { clipForDirection, detectSqueezeDirection, progressForDirection, progressFromBoundary } from "../squeeze-geometry.mjs";
 
 const box = { width: 100, height: 140 };
 
@@ -19,6 +19,13 @@ test("direction progress does not add horizontal and vertical percentages", () =
   assert.equal(progressForDirection("left", { ...box, dx: 20, dy: 100 }), 20);
   assert.equal(progressForDirection("top-left", { ...box, dx: 20, dy: 100 }), 20);
   assert.equal(progressForDirection("bottom-right", { ...box, dx: -50, dy: -70 }), 50);
+});
+
+test("boundary progress is calculated from normalized card coordinates", () => {
+  assert.equal(progressFromBoundary("left", { x: 0.42, y: 0.5 }), 42);
+  assert.equal(progressFromBoundary("right", { x: 0.42, y: 0.5 }), 58);
+  assert.equal(progressFromBoundary("top", { x: 0.5, y: 0.25 }), 25);
+  assert.equal(progressFromBoundary("bottom-right", { x: 0.4, y: 0.6 }), 40);
 });
 
 test("edge and corner masks use different clip paths", () => {

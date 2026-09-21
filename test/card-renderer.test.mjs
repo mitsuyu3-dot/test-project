@@ -38,6 +38,17 @@ test("all card ranks keep their pip counts and suit colors inside the card viewB
   assert.match(renderCardFace({ rank: "K", suit: "♠" }), /fill="#17221e"/);
 });
 
+test("ten-card pips use the compact two-column layout and proportional sizes", () => {
+  assert.deepEqual(PIP_LAYOUTS["10"], [
+    { x: 30, y: 20 }, { x: 70, y: 20 }, { x: 50, y: 30 },
+    { x: 30, y: 40 }, { x: 70, y: 40 }, { x: 30, y: 60, flip: true },
+    { x: 70, y: 60, flip: true }, { x: 50, y: 70, flip: true },
+    { x: 30, y: 80, flip: true }, { x: 70, y: 80, flip: true },
+  ]);
+  assert.equal((renderCardFace({ rank: "10", suit: "♠" }).match(/width="16"/g) ?? []).length, 10);
+  assert.match(renderCardFace({ rank: "A", suit: "♠" }), /width="31"/);
+});
+
 test("court rank is hidden during an early squeeze and shown near completion", () => {
   const early = renderCardFace({ rank: "Q", suit: "♦", faceUp: false, squeezeProgress: 40 });
   const late = renderCardFace({ rank: "Q", suit: "♦", faceUp: false, squeezeProgress: 80 });
