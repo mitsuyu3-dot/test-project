@@ -61,6 +61,7 @@ button { min-height: 44px; border: 0; font: inherit; cursor: pointer; } button:f
 
 .hand-actions[hidden], .bet-panel[hidden], .new-round-button[hidden] { display: none !important; }
 .hand-bet-amount { display: block; min-height: 14px; margin: -8px 0 4px; color: var(--muted); font-size: 9px; font-weight: 900; }
+.squeeze-debug { max-height: 130px; margin: 0 0 8px; overflow: auto; color: var(--navy-700); background: var(--blue-pale); border: 1px solid #b7e4f8; border-radius: 8px; font-size: 9px; white-space: pre-wrap; }
 .settings-icon { display: block; width: 16px; height: 16px; margin: auto; position: relative; border: 3px solid currentColor; border-radius: 50%; }
 .settings-icon::before, .settings-icon::after { position: absolute; inset: 50% auto auto 50%; width: 22px; height: 3px; content: ""; background: currentColor; transform: translate(-50%, -50%); }
 .settings-icon::after { width: 3px; height: 22px; }
