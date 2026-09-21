@@ -8,6 +8,7 @@ const assets = [
   "index.html",
   "app.js",
   "baccarat-rules.mjs",
+  "candidate-geometry.mjs",
   "card-renderer.mjs",
   "squeeze-geometry.mjs",
   "style.css",

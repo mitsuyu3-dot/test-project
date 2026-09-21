@@ -45,8 +45,8 @@ test("ten-card pips use the compact two-column layout and proportional sizes", (
     { x: 70, y: 60, flip: true }, { x: 50, y: 70, flip: true },
     { x: 30, y: 80, flip: true }, { x: 70, y: 80, flip: true },
   ]);
-  assert.equal((renderCardFace({ rank: "10", suit: "♠" }).match(/width="16"/g) ?? []).length, 10);
-  assert.match(renderCardFace({ rank: "A", suit: "♠" }), /width="31"/);
+  assert.equal((renderCardFace({ rank: "10", suit: "♠" }).match(/width="19"/g) ?? []).length, 10);
+  assert.match(renderCardFace({ rank: "A", suit: "♠" }), /width="33"/);
 });
 
 test("court rank is hidden during an early squeeze and shown near completion", () => {
