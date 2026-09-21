@@ -11,6 +11,8 @@ export const PIP_LAYOUTS = Object.freeze({
   10: [{ x: 30, y: 20 }, { x: 70, y: 20 }, { x: 50, y: 30 }, { x: 30, y: 40 }, { x: 70, y: 40 }, { x: 30, y: 60, flip: true }, { x: 70, y: 60, flip: true }, { x: 50, y: 70, flip: true }, { x: 30, y: 80, flip: true }, { x: 70, y: 80, flip: true }],
 });
 
+export const CARD_RANKS = Object.freeze(["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]);
+
 const SUIT_PATHS = Object.freeze({
   heart: "M0 8 C-18-8-13-22 0-12 C13-22 18-8 0 8Z",
   diamond: "M0-20 L13 0 L0 20 L-13 0Z",
