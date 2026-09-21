@@ -25,12 +25,15 @@ test("boundary progress is calculated from normalized card coordinates", () => {
   assert.equal(progressFromBoundary("left", { x: 0.42, y: 0.5 }), 42);
   assert.equal(progressFromBoundary("right", { x: 0.42, y: 0.5 }), 58);
   assert.equal(progressFromBoundary("top", { x: 0.5, y: 0.25 }), 25);
+  assert.equal(progressFromBoundary("bottom", { x: 0.5, y: 0.75 }), 25);
   assert.equal(progressFromBoundary("bottom-right", { x: 0.4, y: 0.6 }), 40);
 });
 
 test("edge and corner masks use different clip paths", () => {
   assert.match(clipForDirection("left", 20), /inset/);
+  assert.equal(clipForDirection("right", 20), "inset(0 0 0 80%)");
   assert.match(clipForDirection("top", 20), /inset/);
+  assert.equal(clipForDirection("bottom", 20), "inset(80% 0 0 0)");
   assert.match(clipForDirection("top-left", 20), /polygon/);
   assert.equal(clipForDirection("bottom-right", 100), "inset(0)");
 });
