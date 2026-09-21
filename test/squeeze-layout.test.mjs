@@ -14,6 +14,6 @@ test("squeeze layout keeps candidates outside the clipped card and actions in fl
 });
 
 test("responsive squeeze layout moves the candidate panel below the card", () => {
-  assert.match(css, /@media \(max-width: 600px\)[^]*\.squeeze-candidates \{ max-width: 340px; width: 100%; \}/);
+  assert.match(css, /@media \(max-width: 720px\)[^]*\.squeeze-candidates \{ max-width: none; width: 100%; \}/);
   assert.match(css, /\.squeeze-direction-bottom \.squeeze-modal-stage \{[^}]*grid-template-rows: auto auto/);
 });
