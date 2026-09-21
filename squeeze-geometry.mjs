@@ -35,6 +35,15 @@ export function progressFromBoundary(direction, { x, y }) {
   return Math.round(clamp(progress * 100) * 100) / 100;
 }
 
+export function canGrabSqueezeBoundary(direction, { x, y }, progress, tolerance = 0.16) {
+  const p = clamp(progress) / 100;
+  if (direction === "left") return x <= Math.max(tolerance, p + tolerance);
+  if (direction === "right") return x >= Math.min(1 - tolerance, 1 - p - tolerance);
+  if (direction === "bottom") return y >= Math.min(1, 1 - p - tolerance);
+  if (direction === "top") return y <= Math.max(0, p + tolerance);
+  return false;
+}
+
 export function clipForDirection(direction, progress) {
   const p = clamp(progress);
   const remaining = 100 - p;

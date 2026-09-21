@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { inferRankCandidates, rankCandidatesFromPips } from "../candidate-geometry.mjs";
 import { PIP_LAYOUTS } from "../card-renderer.mjs";
-import { clipForDirection, detectSqueezeDirection, progressForDirection, progressFromBoundary } from "../squeeze-geometry.mjs";
+import { canGrabSqueezeBoundary, clipForDirection, detectSqueezeDirection, progressForDirection, progressFromBoundary } from "../squeeze-geometry.mjs";
 
 const box = { width: 100, height: 140 };
 
@@ -37,6 +37,14 @@ test("boundary progress is calculated from normalized card coordinates", () => {
   assert.equal(progressFromBoundary("top", { x: 0.5, y: 0.25 }), 25);
   assert.equal(progressFromBoundary("bottom", { x: 0.5, y: 0.75 }), 25);
   assert.equal(progressFromBoundary("bottom-right", { x: 0.4, y: 0.6 }), 40);
+});
+
+test("a partially revealed boundary can be grabbed again", () => {
+  assert.equal(canGrabSqueezeBoundary("left", { x: 0.32, y: 0.5 }, 31), true);
+  assert.equal(canGrabSqueezeBoundary("left", { x: 0.38, y: 0.5 }, 23), true);
+  assert.equal(canGrabSqueezeBoundary("right", { x: 0.68, y: 0.5 }, 31), true);
+  assert.equal(canGrabSqueezeBoundary("bottom", { x: 0.5, y: 0.69 }, 31), true);
+  assert.equal(canGrabSqueezeBoundary("left", { x: 0.9, y: 0.5 }, 31), false);
 });
 
 test("edge and corner masks use different clip paths", () => {
