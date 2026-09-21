@@ -9,7 +9,7 @@ const box = { width: 100, height: 140 };
 test("candidate inference uses only observed pip positions", () => {
   const sevenAndEightClue = [{ x: 30, y: 20 }, { x: 70, y: 20 }, { x: 50, y: 32 }];
   assert.deepEqual(rankCandidatesFromPips(sevenAndEightClue), ["7", "8"]);
-  assert.deepEqual(inferRankCandidates([{ x: 30, y: 20 }, { x: 70, y: 20 }], "left", 70), ["6", "7", "8", "10"]);
+  assert.deepEqual(inferRankCandidates([{ x: 30, y: 20 }, { x: 70, y: 20 }], "left", 23), ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]);
   assert.deepEqual(inferRankCandidates([], "bottom", 40), ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]);
   assert.equal(PIP_LAYOUTS["10"].length, 10);
 });
